@@ -168,7 +168,7 @@ def run_minimization(data, priors, plot=False, init_pars=None, module='george'):
 
 	phase, flux, error = data
 	# Setting up GP using results from minimization
-	final_pars = results.x
+	final_pars = abs(results.x)
 	gp = setup_gp(final_pars, module)
 	gp.compute(phase, error)
 	# Printing hyperparameters
@@ -188,6 +188,7 @@ def run_minimization(data, priors, plot=False, init_pars=None, module='george'):
 		# Plot conditional predictive distribution of the model in upper plot
 		mu, cov = gp.predict(flux, x)
 		std = np.sqrt(np.diag(cov))
+		std = np.nan_to_num(std)
 		ax1.plot(x, mu, color="#ff7f0e", label= 'Mean distribution GP')
 		ax1.fill_between(x, mu+3*std, mu-3*std, color="#ff7f0e", alpha=0.2, edgecolor="none", label= '3 sigma')
 		ax1.fill_between(x, mu+2*std, mu-2*std, color="#ff7f0e", alpha=0.4, edgecolor="none", label= '2 sigma')
@@ -261,6 +262,7 @@ def run_mcmc(data, priors, plot=False, init_pars=None, nwalkers=20, burnin=500, 
 		# Plot conditional predictive distribution of the model in upper plot
 		mu, cov = gp.predict(flux, x)
 		std = np.sqrt(np.diag(cov))
+		std = np.nan_to_num(std)
 		ax1.plot(x, mu, color="#ff7f0e", label= 'Mean distribution GP')
 		ax1.fill_between(x, mu+3*std, mu-3*std, color="#ff7f0e", alpha=0.2, edgecolor="none", label= '3 sigma')
 		ax1.fill_between(x, mu+2*std, mu-2*std, color="#ff7f0e", alpha=0.4, edgecolor="none", label= '2 sigma')
